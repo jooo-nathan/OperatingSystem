@@ -12,7 +12,7 @@ Memahami spesifikasi CPU dan kondisi memori pada server/VM
 
 ### 1. Menampilkan informasi CPU
 
-![Melihat informasi CPU](PERTEMUAN_2/img/1.1.png)
+![Melihat informasi CPU](img/1.1.png)
 
 ```lscpu```
 
