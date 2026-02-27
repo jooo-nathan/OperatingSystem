@@ -14,18 +14,25 @@ Buatlah script yang:
 ### JAWABAN
 
 1. ![1.1](img/1.1.png)
+
 ```ls -alS /var/log/ | head -11 | grep -v "total"```
 
 2. ![1.2](img/1.2.png)
+
 ```ls -alS /var/log/ | head -11 | grep -v "total" 1> large-log.txt```
+
 ```cat large-log.txt```
    
 3. ![1.3](img/1.3.png)
+
 ```ls -alS /var/log/ | head -11 | grep -v "total" | tee large-log.txt```
+
 ```cat large-log.txt```
 
 4. ![1.4](img/1.4.png)
+
 ```s -alS /var/log/ | head -11 | grep -v "total" 2> error.log | tee large-log.txt```
+
 ```cat error.log```
 
 ## LATIHAN 3.2
@@ -42,15 +49,19 @@ Hint: Gunakan cut, sort, dan operator redirect.
 ### JAWABAN
 
 1. ![2.1](img/2.1.png)
+
 ```cat /etc/passwd```
 
 2. ![2.2](img/2.2.png)
+
 ```cat /etc/passwd | cut -d: -f1```
 
 3. ![2.3](img/2.3.png)
+
 ```cat /etc/passwd | cut -d: -f1 | sort -d```
 
 4. ![2.4](img/2.4.png)
+
 ```cat /etc/passwd | cut -d: -f1 | sort -d 1> sorted-users.txt```
 
 ## LATIHAN 3.3
@@ -68,6 +79,7 @@ Tulis script monitoring yang:
 1. Menggunakan uptime untuk melihat beban rata-rata sistem sebagai indikator penggunaan CPU dan free untuk melihat statistik penggunaan memori (RAM)
 
 ```uptime```
+
 ```free```
 
 2. Menggunakan date untuk menyimpan log timestamp
@@ -99,15 +111,19 @@ Buat perintah yang:
 ### JAWABAN
 
 1. ![4.1](img/4.1.png)
+
 ```find / -name "*.conf"```
 
 2. ![4.2](img/4.2.png)
+
 ```find / -name "*.conf" 2> /dev/null```
 
 3. ![4.3](img/4.3.png)
+
 ```find / -name "*.conf" 2> /dev/null; find / -name "*.conf" 2> /dev/null | wc -l```
 
 4. ![4.4](img/4.4.png)
+
 ```(find / -name "*.conf" 2> /dev/null; find / -name "*.conf" 2> /dev/null | wc -l) > confpath.txt```
 
 *note: cek dengan ```cat confpath.txt | tail -15```
@@ -154,5 +170,7 @@ Cek dengan :
 ![5.3](img/5.3.png)
 
 ```cat backup-success.log```
+
 ```cat backup-error.log```
+
 ```cat backup.tar```
