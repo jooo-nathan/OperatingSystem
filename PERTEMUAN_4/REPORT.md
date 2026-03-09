@@ -178,7 +178,7 @@ Operasi file dan struktur direktori
 
    ![L5](img/L5.png)
 
-6 dan 7. Mengubah kembali ke direktori home dan membuat subdirektori `work` dan `play`
+6. (6 dan 7) Mengubah kembali ke direktori home dan membuat subdirektori `work` dan `play`
 
    ![L67](img/L67.png)
 
