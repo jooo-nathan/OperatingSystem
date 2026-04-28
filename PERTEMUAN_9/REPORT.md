@@ -342,84 +342,84 @@ Konsep wajib: set -euo pipefail, trap, getopts, fungsi dengan local, for, if, da
 
 2. Mengetik script yang dibutuhkan
 
-        <details>
-            <summary>Code</summary>
-            #!/bin/bash
+<details>
+    <summary>Code</summary>
+    #!/bin/bash
 
-            # 1. Best Practices: set -euo pipefail
-            # -e: berhenti jika ada error
-            # -u: error jika ada variabel yang belum didefinisikan
-            # -o pipefail: menangkap error di dalam pipe (|)
-            set -euo pipefail
+    # 1. Best Practices: set -euo pipefail
+    # -e: berhenti jika ada error
+    # -u: error jika ada variabel yang belum didefinisikan
+    # -o pipefail: menangkap error di dalam pipe (|)
+    set -euo pipefail
 
-            # Konfigurasi File Log
-            LOG_DIR="../logs"
-            mkdir -p "$LOG_DIR"
-            LOG_FILE="$LOG_DIR/healthcheck-$(date +%Y-%m-%d).log"
+    # Konfigurasi File Log
+    LOG_DIR="../logs"
+    mkdir -p "$LOG_DIR"
+    LOG_FILE="$LOG_DIR/healthcheck-$(date +%Y-%m-%d).log"
 
-            # Batas default (80%)
-            THRESHOLD=80
+    # Batas default (80%)
+    THRESHOLD=80
 
-            # 2. Trap: Membersihkan atau memberi pesan saat script selesai/interupsi
-            trap 'echo "[$(date +%T)] Pemeriksaan Selesai."' EXIT
+    # 2. Trap: Membersihkan atau memberi pesan saat script selesai/interupsi
+    trap 'echo "[$(date +%T)] Pemeriksaan Selesai."' EXIT
 
-            # 3. Fungsi dengan variabel local
-            tampilkan_info() {
-                local host=$(hostname)
-                local waktu=$(date "+%Y-%m-%d %H:%M:%S")
-                local up=$(uptime -p)
-                
-                echo "------------------------------------------"
-                echo "WAKTU    : $waktu"
-                echo "HOSTNAME : $host"
-                echo "UPTIME   : $up"
-            }
+    # 3. Fungsi dengan variabel local
+    tampilkan_info() {
+        local host=$(hostname)
+        local waktu=$(date "+%Y-%m-%d %H:%M:%S")
+        local up=$(uptime -p)
+        
+        echo "------------------------------------------"
+        echo "WAKTU    : $waktu"
+        echo "HOSTNAME : $host"
+        echo "UPTIME   : $up"
+    }
 
-            cek_cpu_mem() {
-                echo "--- CPU & MEMORY ---"
-                # Mengambil penggunaan CPU (menggunakan top)
-                local cpu_load=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
-                local mem_usage=$(free -m | awk '/Mem:/ { printf("%.2f%%", $3/$2*100) }')
-                
-                echo "CPU Usage: $cpu_load%"
-                echo "Mem Usage: $mem_usage"
-            }
+    cek_cpu_mem() {
+        echo "--- CPU & MEMORY ---"
+        # Mengambil penggunaan CPU (menggunakan top)
+        local cpu_load=$(top -bn1 | grep "Cpu(s)" | awk '{print $2 + $4}')
+        local mem_usage=$(free -m | awk '/Mem:/ { printf("%.2f%%", $3/$2*100) }')
+        
+        echo "CPU Usage: $cpu_load%"
+        echo "Mem Usage: $mem_usage"
+    }
 
-            cek_disk() {
-                echo "--- DISK FILESYSTEM ---"
-                # Loop 'for' untuk mengecek setiap baris hasil df
-                # Membaca filesystem, ukuran, dan persentase
-                df -h | grep '^/dev/' | while read -r line; do
-                    local fs=$(echo "$line" | awk '{print $1}')
-                    local pcn=$(echo "$line" | awk '{print $5}' | sed 's/%//')
-                    
-                    echo "Filesystem $fs: ${pcn}% digunakan"
-                    
-                    # 'if' untuk mengecek ambang batas
-                    if [ "$pcn" -gt "$THRESHOLD" ]; then
-                        echo ">> PERINGATAN: $fs hampir penuh! ($pcn%) <<"
-                    fi
-                done
-            }
+    cek_disk() {
+        echo "--- DISK FILESYSTEM ---"
+        # Loop 'for' untuk mengecek setiap baris hasil df
+        # Membaca filesystem, ukuran, dan persentase
+        df -h | grep '^/dev/' | while read -r line; do
+            local fs=$(echo "$line" | awk '{print $1}')
+            local pcn=$(echo "$line" | awk '{print $5}' | sed 's/%//')
+            
+            echo "Filesystem $fs: ${pcn}% digunakan"
+            
+            # 'if' untuk mengecek ambang batas
+            if [ "$pcn" -gt "$THRESHOLD" ]; then
+                echo ">> PERINGATAN: $fs hampir penuh! ($pcn%) <<"
+            fi
+        done
+    }
 
-            # 4. Getopts: Opsi -t untuk mengubah threshold
-            while getopts "t:h" opt; do
-            case $opt in
-                t) THRESHOLD=$OPTARG ;;
-                h) echo "Penggunaan: $0 [-t threshold_angka]"; exit 0 ;;
-                *) exit 1 ;;
-            esac
-            done
+    # 4. Getopts: Opsi -t untuk mengubah threshold
+    while getopts "t:h" opt; do
+    case $opt in
+        t) THRESHOLD=$OPTARG ;;
+        h) echo "Penggunaan: $0 [-t threshold_angka]"; exit 0 ;;
+        *) exit 1 ;;
+    esac
+    done
 
-            # 5. Eksekusi Utama dengan 'tee'
-            # Semua output dari fungsi-fungsi ini akan masuk ke terminal DAN log file
-            {
-                tampilkan_info
-                cek_cpu_mem
-                cek_disk
-                echo "------------------------------------------"
-            } | tee -a "$LOG_FILE"
-        </details>
+    # 5. Eksekusi Utama dengan 'tee'
+    # Semua output dari fungsi-fungsi ini akan masuk ke terminal DAN log file
+    {
+        tampilkan_info
+        cek_cpu_mem
+        cek_disk
+        echo "------------------------------------------"
+    } | tee -a "$LOG_FILE"
+</details>
 
 3. Memberikan izin dan kemampuan untuk dapat dieksekusi
 
